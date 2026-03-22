@@ -9,17 +9,17 @@ import Result from './Pages/Result';   // Result page
 
 function App() {
   return (
-    <>
-      <BrowserRouter>
-        <Navbar />
+    <BrowserRouter>
+      <Navbar />
+      <main className="app-main">
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/upload" element={<Upload />} />
           <Route path="/result" element={<Result />} />
         </Routes>
-      </BrowserRouter>
-    </>
-  )
+      </main>
+    </BrowserRouter>
+  );
 }
 
 export default App

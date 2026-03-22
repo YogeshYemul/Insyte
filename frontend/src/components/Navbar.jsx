@@ -1,36 +1,41 @@
-import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
-import './Navbar.css';
+import React, { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
+import "./Navbar.css";
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
 
-  const toggleMenu = () => {
-    setIsOpen(!isOpen);
-  };
+  const closeMenu = () => setIsOpen(false);
+  const toggleMenu = () => setIsOpen((v) => !v);
 
-  const closeMenu = () => {
-    setIsOpen(false);
-  };
+  useEffect(() => {
+    if (!isOpen) return undefined;
+    const onEscape = (e) => {
+      if (e.key === "Escape") setIsOpen(false);
+    };
+    document.addEventListener("keydown", onEscape);
+    const prev = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.removeEventListener("keydown", onEscape);
+      document.body.style.overflow = prev;
+    };
+  }, [isOpen]);
 
   return (
-    <nav className="navbar">
+    <nav className="navbar" aria-label="Main">
       <div className="navbar-container">
-        {/* Logo */}
         <Link to="/" className="navbar-logo" onClick={closeMenu}>
-          <span className="logo-icon">📊</span>
-          <span className="logo-text">DataInsights</span>
+          <span className="logo-icon" aria-hidden>
+            📊
+          </span>
+          <span className="logo-text">Insyte</span>
         </Link>
 
-        {/* Hamburger Menu */}
-        <div className={`hamburger ${isOpen ? 'active' : ''}`} onClick={toggleMenu}>
-          <span></span>
-          <span></span>
-          <span></span>
-        </div>
-
-        {/* Navigation Links */}
-        <ul className={`nav-menu ${isOpen ? 'active' : ''}`}>
+        <ul
+          className={`nav-menu ${isOpen ? "nav-menu--open" : ""}`}
+          id="primary-navigation"
+        >
           <li className="nav-item">
             <Link to="/" className="nav-link" onClick={closeMenu}>
               Home
@@ -42,25 +47,50 @@ export default function Navbar() {
             </Link>
           </li>
           <li className="nav-item">
-            <a href="#features" className="nav-link" onClick={closeMenu}>
+            <a href="/#features" className="nav-link" onClick={closeMenu}>
               Features
             </a>
           </li>
           <li className="nav-item">
-            <a href="#about" className="nav-link" onClick={closeMenu}>
+            <a href="/#about" className="nav-link" onClick={closeMenu}>
               About
             </a>
           </li>
+          <li className="nav-item nav-item-mobile-cta">
+            <Link to="/upload" className="nav-link nav-cta-link" onClick={closeMenu}>
+              Get started
+            </Link>
+          </li>
         </ul>
 
-        {/* CTA Button */}
         <Link to="/upload" className="cta-button" onClick={closeMenu}>
-          Get Started
+          Get started
         </Link>
+
+        <button
+          type="button"
+          className={`hamburger ${isOpen ? "hamburger--open" : ""}`}
+          onClick={toggleMenu}
+          aria-expanded={isOpen}
+          aria-controls="primary-navigation"
+          aria-label={isOpen ? "Close menu" : "Open menu"}
+        >
+          <span />
+          <span />
+          <span />
+        </button>
       </div>
 
-      {/* Navbar Blur Background */}
-      <div className="navbar-glow"></div>
+      {/* Mobile: dim page + tap outside to close; menu panel stacks above this */}
+      <button
+        type="button"
+        className={`nav-backdrop ${isOpen ? "nav-backdrop--visible" : ""}`}
+        onClick={closeMenu}
+        tabIndex={-1}
+        aria-hidden="true"
+      />
+
+      <div className="navbar-glow" aria-hidden />
     </nav>
   );
 }

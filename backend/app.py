@@ -9,15 +9,35 @@ import pandas as pd
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'EDA-Pipeline')))
 from eda.eda_pipeline import run_eda
 
-app = FastAPI()
+app = FastAPI(
+    title="Insyte API",
+    description="CSV upload and EDA pipeline for Insyte.",
+)
 
-# Frontend se requests ke liye CORS
+# Local dev + LAN/mobile (Vite on another host/port): permissive CORS
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:5173", "http://127.0.0.1:5173"],
+    allow_origins=["*"],
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+
+@app.get("/")
+def root():
+    """So opening http://127.0.0.1:<port>/ in a browser does not look like the server is down."""
+    return {
+        "service": "Insyte API",
+        "status": "running",
+        "docs": "/docs",
+        "upload": "POST /upload (multipart file field: file)",
+    }
+
+
+@app.get("/health")
+def health():
+    return {"status": "ok"}
+
 
 @app.post("/upload")
 async def upload_file(file: UploadFile = File(...)):

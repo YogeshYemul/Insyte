@@ -1,14 +1,8 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { Link } from 'react-router-dom';
 import '../styles/Home.css';
 
 export default function Home() {
-  const [isLoaded, setIsLoaded] = useState(false);
-
-  useEffect(() => {
-    setIsLoaded(true);
-  }, []);
-
   return (
     <div className="home-wrapper">
       {/* Hero Section */}
@@ -19,7 +13,7 @@ export default function Home() {
           <div className="blob blob-3"></div>
         </div>
 
-        <div className={`hero-content ${isLoaded ? 'loaded' : ''}`}>
+        <div className="hero-content loaded">
           <div className="hero-badge">
             <span>✨ AI-Powered Data Analytics</span>
           </div>
@@ -88,7 +82,7 @@ export default function Home() {
       </section>
 
       {/* Features Section */}
-      <section className="features-section">
+      <section id="features" className="features-section">
         <div className="section-header">
           <h2>Powerful Features</h2>
           <p>Everything you need for complete data analysis</p>
@@ -129,7 +123,7 @@ export default function Home() {
       </section>
 
       {/* How It Works Section */}
-      <section className="how-it-works">
+      <section id="about" className="how-it-works">
         <div className="section-header">
           <h2>How It Works</h2>
           <p>3 simple steps to data insights</p>
